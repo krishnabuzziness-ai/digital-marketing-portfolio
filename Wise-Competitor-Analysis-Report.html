@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Ad Intelligence Report — May 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700;800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f0a;
+  --surface: #111711;
+  --surface2: #182018;
+  --surface3: #1e281e;
+  --border: rgba(120,200,120,0.12);
+  --border2: rgba(120,200,120,0.22);
+  --green: #4ade80;
+  --green-dim: #22c55e;
+  --green-dark: #166534;
+  --green-pale: rgba(74,222,128,0.08);
+  --amber: #fbbf24;
+  --blue: #60a5fa;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --text: #e8f5e8;
+  --text2: #9db89d;
+  --text3: #5a745a;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Instrument Sans', sans-serif;
+  --display: 'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
+
+/* ── HEADER ── */
+header {
+  padding: 40px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+h1 {
+  font-family: var(--display);
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  max-width: 580px;
+}
+h1 span { color: var(--green); }
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text2);
+  white-space: nowrap;
+}
+.pill.green { border-color: rgba(74,222,128,0.3); color: var(--green); background: rgba(74,222,128,0.07); }
+
+/* ── TABS ── */
+.tabs-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.tab-btn {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  padding: 9px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all .15s;
+  margin-bottom: -1px;
+  text-transform: uppercase;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+/* ── PANELS ── */
+.panel { display: none; animation: fadein .2s ease; }
+.panel.active { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION LABEL ── */
+.slabel {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+}
+
+/* ── METRICS ROW ── */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.metric {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.metric-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; font-family: var(--mono); }
+.metric-val { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--text); }
+.metric-val.sm { font-size: 14px; margin-top: 3px; }
+.metric-val.green { color: var(--green); }
+
+/* ── HOOK LIST ── */
+.hooks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.hook {
+  padding: 12px 16px;
+  background: var(--green-pale);
+  border-left: 3px solid var(--green);
+  border-radius: 0 6px 6px 0;
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+.card.accent { border-color: rgba(74,222,128,0.3); }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin: 0 4px 2px 0;
+}
+.t-green { background: rgba(74,222,128,0.12); color: var(--green); }
+.t-amber { background: rgba(251,191,36,0.12); color: var(--amber); }
+.t-blue  { background: rgba(96,165,250,0.12); color: var(--blue); }
+.t-red   { background: rgba(248,113,113,0.12); color: var(--red); }
+.t-purple{ background: rgba(167,139,250,0.12); color: var(--purple); }
+
+/* ── TRIGGER ITEM ── */
+.trigger-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text2);
+}
+.trigger-item:last-child { border-bottom: none; padding-bottom: 0; }
+.trigger-item:first-child { padding-top: 0; }
+
+/* ── AUDIENCE ── */
+.aud-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.aud-row:last-child { border-bottom: none; padding-bottom: 0; }
+.aud-row:first-child { padding-top: 0; }
+.aud-key { color: var(--text3); font-family: var(--mono); font-size: 11px; }
+.aud-val { color: var(--text); text-align: right; max-width: 60%; }
+
+/* ── POSITIONING BLOCK ── */
+.pos-block {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text2);
+}
+
+/* ── OVERVIEW RANK TABLE ── */
+.rank-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.rank-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border2);
+}
+.rank-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: middle;
+}
+.rank-table tr:last-child td { border-bottom: none; }
+.rank-table tr:hover td { background: var(--surface3); }
+
+.brand-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.b-skydo  { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+.b-xflow  { background: rgba(251,191,36,0.10); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+.b-wise   { background: rgba(96,165,250,0.10); color: var(--blue); border: 1px solid rgba(96,165,250,0.25); }
+.b-pay    { background: rgba(167,139,250,0.10); color: var(--purple); border: 1px solid rgba(167,139,250,0.25); }
+.b-wu     { background: rgba(156,163,175,0.10); color: #9ca3af; border: 1px solid rgba(156,163,175,0.2); }
+
+.rank-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.r1 { background: rgba(74,222,128,0.12); color: var(--green); }
+.r2 { background: rgba(251,191,36,0.10); color: var(--amber); }
+.r3 { background: rgba(167,139,250,0.10); color: var(--purple); }
+.rx { background: rgba(248,113,113,0.10); color: var(--red); }
+
+/* ── STAR BAR ── */
+.star-bar { display: flex; gap: 3px; align-items: center; }
+.s-fill  { width: 20px; height: 5px; border-radius: 2px; background: var(--green); }
+.s-empty { width: 20px; height: 5px; border-radius: 2px; background: var(--surface3); }
+
+/* ── CATEGORY WINNERS ── */
+.winners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.winner-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.winner-label { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.winner-name { font-family: var(--display); font-size: 16px; font-weight: 700; }
+
+/* ── HIGH INTENT TABLE ── */
+.intent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.intent-row:last-child { border-bottom: none; }
+.intent-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+}
+.d-yes  { background: var(--green); }
+.d-part { background: var(--amber); }
+.d-no   { background: var(--red); }
+.intent-content { flex: 1; }
+.intent-brand { font-weight: 500; font-size: 13px; margin-bottom: 3px; }
+.intent-detail { font-size: 12.5px; color: var(--text2); line-height: 1.55; }
+
+/* ── PLAYBOOK ── */
+.gap-list { display: flex; flex-direction: column; gap: 0; }
+.gap-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.gap-item:last-child { border-bottom: none; }
+.gap-num {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--green);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 36px;
+}
+.gap-title { font-weight: 500; font-size: 14px; color: var(--text); margin-bottom: 3px; }
+.gap-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+.hook-big {
+  background: var(--surface2);
+  border: 1px solid rgba(74,222,128,0.3);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+}
+.hook-big-label { font-family: var(--mono); font-size: 10px; color: var(--green); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+.hook-big-text { font-family: var(--display); font-size: 18px; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+.steal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.steal-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  border-top: 3px solid;
+}
+.steal-card.wise  { border-top-color: var(--blue); }
+.steal-card.pay   { border-top-color: var(--purple); }
+.steal-card.xf    { border-top-color: var(--amber); }
+.steal-card.sky   { border-top-color: var(--green); }
+.steal-from { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.steal-from.wise   { color: var(--blue); }
+.steal-from.pay    { color: var(--purple); }
+.steal-from.xf     { color: var(--amber); }
+.steal-from.sky    { color: var(--green); }
+.steal-label { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.steal-text { font-size: 12px; color: var(--text2); line-height: 1.55; }
+
+/* ── SECTION HEADING ── */
+.sh { font-family: var(--display); font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 0 0;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+footer span { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-eyebrow">Meta Ads Library Intelligence</div>
+      <h1>India Ad <span>Intelligence</span><br>Report</h1>
+    </div>
+    <div class="header-meta">
+      <span class="pill green">India Market</span>
+      <span class="pill">May 2026</span>
+      <span class="pill">5 Brands Analyzed</span>
+      <span class="pill">Analyst: Krishna Sharma</span>
+      <span class="pill">Intl. Money Transfer</span>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-row">
+  <button class="tab-btn active" onclick="showTab('overview',this)">Overview</button>
+  <button class="tab-btn" onclick="showTab('wise',this)">Wise</button>
+  <button class="tab-btn" onclick="showTab('payoneer',this)">Payoneer</button>
+  <button class="tab-btn" onclick="showTab('wu',this)">Western Union</button>
+  <button class="tab-btn" onclick="showTab('skydo',this)">Skydo</button>
+  <button class="tab-btn" onclick="showTab('xflow',this)">Xflowpay</button>
+  <button class="tab-btn" onclick="showTab('playbook',this)">Playbook</button>
+</div>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<div id="overview" class="panel active">
+  <div class="slabel">Brand ranking matrix</div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="rank-table">
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Positioning</th>
+          <th>Trust</th>
+          <th>Clarity</th>
+          <th>India Focus</th>
+          <th>Rank</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="brand-pill b-skydo">Skydo</span></td>
+          <td style="color:var(--text2)">India Challenger</td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div></div></td>
+          <td><span class="rank-badge r1">🥇 Winner</span></td>
+        </tr>
+        <tr>
+          <td><span class="brand-pill b-xflow">Xflowpay</span></td>
+          <td style="color:var(--text2)">Honest Revealer</td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><span class="rank-badge r2">🥈 Runner-up</span></td>
+        </tr>
+        <tr>
+          <td><span class="brand-pill b-wise">Wise</span></td>
+          <td style="color:var(--text2)">Anti-Bank</td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><span class="rank-badge r2">🥈 Runner-up</span></td>
+        </tr>
+        <tr>
+          <td><span class="brand-pill b-pay">Payoneer</span></td>
+          <td style="color:var(--text2)">B2B Professional</td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div></div></td>
+          <td><span class="rank-badge r3">🥉 3rd Place</span></td>
+        </tr>
+        <tr>
+          <td><span class="brand-pill b-wu">Western Union</span></td>
+          <td style="color:var(--text2)">Traditional Legacy</td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div><div class="s-empty"></div></div></td>
+          <td><div class="star-bar"><div class="s-fill"></div><div class="s-fill"></div><div class="s-empty"></div><div class="s-empty"></div><div class="s-empty"></div></div></td>
+          <td><span class="rank-badge rx">❌ No Match</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slabel">Category winners</div>
+  <div class="winners-grid">
+    <div class="winner-card"><div class="winner-label">Trust winner</div><div class="winner-name" style="color:var(--blue)">Wise</div></div>
+    <div class="winner-card"><div class="winner-label">Clarity winner</div><div class="winner-name" style="color:var(--green)">Skydo</div></div>
+    <div class="winner-card"><div class="winner-label">Creative winner</div><div class="winner-name" style="color:var(--amber)">Xflowpay</div></div>
+    <div class="winner-card"><div class="winner-label">High-intent CTA</div><div class="winner-name" style="color:var(--green)">Skydo</div></div>
+    <div class="winner-card"><div class="winner-label">Localization</div><div class="winner-name" style="color:var(--blue)">Wise</div></div>
+    <div class="winner-card"><div class="winner-label">India positioning</div><div class="winner-name" style="color:var(--green)">Skydo</div></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">CTA strategy</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Skydo</span><span class="tag t-green">Sign Up — direct</span></div>
+        <div class="aud-row"><span class="aud-key">Payoneer</span><span class="tag t-green">Sign Up — action</span></div>
+        <div class="aud-row"><span class="aud-key">Wise</span><span class="tag t-blue">Learn More</span></div>
+        <div class="aud-row"><span class="aud-key">Xflowpay</span><span class="tag t-blue">Learn More</span></div>
+        <div class="aud-row"><span class="aud-key">Western Union</span><span class="tag t-amber">Mixed — testing</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Language strategy</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Wise</span><span class="aud-val" style="color:var(--green)">Hindi + English ✓</span></div>
+        <div class="aud-row"><span class="aud-key">Payoneer</span><span class="aud-val" style="color:var(--text2)">English only</span></div>
+        <div class="aud-row"><span class="aud-key">Western Union</span><span class="aud-val" style="color:var(--text2)">English only</span></div>
+        <div class="aud-row"><span class="aud-key">Skydo</span><span class="aud-val" style="color:var(--text2)">English only</span></div>
+        <div class="aud-row"><span class="aud-key">Xflowpay</span><span class="aud-val" style="color:var(--text2)">English only</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">High-intent ad assessment</div>
+  <div class="card">
+    <div class="intent-row">
+      <div class="intent-dot d-yes"></div>
+      <div class="intent-content">
+        <div class="intent-brand" style="color:var(--green)">Skydo — Most Effective</div>
+        <div class="intent-detail">"Bank says wait 7 days. It's 2026 — not normal." Direct "Sign Up" CTA + bullet-point ads filter serious buyers.</div>
+      </div>
+    </div>
+    <div class="intent-row">
+      <div class="intent-dot d-yes"></div>
+      <div class="intent-content">
+        <div class="intent-brand" style="color:var(--amber)">Xflowpay — Highly Creative</div>
+        <div class="intent-detail">"You're losing ₹50,000 per $10,000." Meme ads instantly qualify and trigger high-volume earners.</div>
+      </div>
+    </div>
+    <div class="intent-row">
+      <div class="intent-dot d-yes"></div>
+      <div class="intent-content">
+        <div class="intent-brand" style="color:var(--purple)">Payoneer — Strictly B2B</div>
+        <div class="intent-detail">"Free Digital FIRA." Niche hook that only actual exporters understand — extremely high-intent filtering.</div>
+      </div>
+    </div>
+    <div class="intent-row">
+      <div class="intent-dot d-part"></div>
+      <div class="intent-content">
+        <div class="intent-brand" style="color:var(--blue)">Wise — Partial</div>
+        <div class="intent-detail">Generic messaging targeting NRIs, parents, and freelancers. "Learn More" CTA misses immediate high-intent conversions.</div>
+      </div>
+    </div>
+    <div class="intent-row">
+      <div class="intent-dot d-no"></div>
+      <div class="intent-content">
+        <div class="intent-brand" style="color:var(--red)">Western Union — No</div>
+        <div class="intent-detail">Outdated creative language. Legacy feel actively repels younger, digital-first users. Mixed CTAs show no clear strategy.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ WISE ══════════════ -->
+<div id="wise" class="panel">
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Positioning</div><div class="metric-val sm">Anti-Bank</div></div>
+    <div class="metric"><div class="metric-label">Trust</div><div class="metric-val green">5/5</div></div>
+    <div class="metric"><div class="metric-label">India focus</div><div class="metric-val green">4/5</div></div>
+    <div class="metric"><div class="metric-label">Clarity</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">CTA</div><div class="metric-val sm">Learn More</div></div>
+    <div class="metric"><div class="metric-label">Language</div><div class="metric-val sm" style="color:var(--green)">Hindi + EN</div></div>
+  </div>
+
+  <div class="slabel">Ad hooks</div>
+  <div class="hooks">
+    <div class="hook">"Get Paid Across Borders" — speaks directly to freelancers, aspirational for earning globally</div>
+    <div class="hook">"Koi bade exchange rate ya chupi hui fees nahi" — fear removal in Hindi, strongest localization</div>
+    <div class="hook">"Most transfers arrive in twenty seconds or less" — speed as proof, not just a claim</div>
+    <div class="hook">"Have bank accounts in different currencies?" — curiosity hook targeting NRIs</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">Emotional triggers</div>
+      <div class="card">
+        <div class="trigger-item"><span class="tag t-red">Fear</span><span>Hidden fees removed — "no chupi fees"</span></div>
+        <div class="trigger-item"><span class="tag t-blue">Trust</span><span>Speed proof — "20 seconds", exact amounts like $1,500</span></div>
+        <div class="trigger-item"><span class="tag t-green">Pride</span><span>"Get Paid Across Borders" feels aspirational for freelancers</span></div>
+        <div class="trigger-item"><span class="tag t-amber">Transparency</span><span>Currency flags (EUR→INR), visual proof it works</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Target audience</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Age</span><span class="aud-val">25–45 years</span></div>
+        <div class="aud-row"><span class="aud-key">Primary segment</span><span class="aud-val">Freelancers, NRIs, parents of students abroad</span></div>
+        <div class="aud-row"><span class="aud-key">Core pain</span><span class="aud-val">Frustrated with bank fees, earning/sending abroad</span></div>
+        <div class="aud-row"><span class="aud-key">Profile</span><span class="aud-val">Digitally comfortable, urban, already frustrated</span></div>
+        <div class="aud-row"><span class="aud-key">Repeated themes</span><span class="aud-val">No hidden fees, "few taps", twenty seconds</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Visual style</div>
+  <div class="card"><div class="pos-block">Bold dark green + bright green palette — instantly recognizable and premium-feeling. Ads use real Indian faces (women working on laptops, fathers, parents) which makes it feel local and relatable. Text is large, bold, and centered. Both Hindi and English ads are running — strongest localization commitment of all five brands.</div></div>
+
+  <div class="slabel">Core positioning</div>
+  <div class="card accent"><div class="pos-block">"We are the transparent, fair, modern way to move money internationally — no hidden fees, real exchange rates, fast transfers." Positions as a fast, modern alternative to traditional banks that truly understands Indian families.</div></div>
+</div>
+
+<!-- ══════════════ PAYONEER ══════════════ -->
+<div id="payoneer" class="panel">
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Positioning</div><div class="metric-val sm">B2B Professional</div></div>
+    <div class="metric"><div class="metric-label">Trust</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">India focus</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">Clarity</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">CTA</div><div class="metric-val sm" style="color:var(--green)">Sign Up</div></div>
+    <div class="metric"><div class="metric-label">Language</div><div class="metric-val sm">English only</div></div>
+  </div>
+
+  <div class="slabel">Ad hooks</div>
+  <div class="hooks">
+    <div class="hook">"Global Payments. Simply Done." — simplicity promise, clean brand tagline</div>
+    <div class="hook">"Get paid like a local business in USD, EUR and more" — strongest hook for Indian freelancers, equality framing</div>
+    <div class="hook">"Free Digital FIRA" — India-specific compliance document, huge trust signal for IT exporters</div>
+    <div class="hook">"Built for Indian IT exporters" — hyper-specific India positioning that filters the right audience</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">Emotional triggers</div>
+      <div class="card">
+        <div class="trigger-item"><span class="tag t-blue">Aspiration</span><span>"Get paid like a local business" makes Indian freelancers feel equal to global businesses</span></div>
+        <div class="trigger-item"><span class="tag t-green">Trust</span><span>"Trusted by millions globally", "2,000+ marketplaces" — scale as proof</span></div>
+        <div class="trigger-item"><span class="tag t-amber">Compliance</span><span>Free FIRA — huge signal that only serious exporters understand and value</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Target audience</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Age</span><span class="aud-val">25–40 years</span></div>
+        <div class="aud-row"><span class="aud-key">Primary segment</span><span class="aud-val">Indian IT freelancers & small IT businesses</span></div>
+        <div class="aud-row"><span class="aud-key">Platforms</span><span class="aud-val">Upwork, Fiverr — earning in USD/EUR</span></div>
+        <div class="aud-row"><span class="aud-key">Core pain</span><span class="aud-val">Needs FIRA for tax, wants compliance handled</span></div>
+        <div class="aud-row"><span class="aud-key">City tier</span><span class="aud-val">Tier 1, English-speaking, urban</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Visual style</div>
+  <div class="card"><div class="pos-block">Corporate dark purple and bright yellow-green — professional but less warm than Wise. Shows diverse men and women working on laptops to target professional freelancers. All ads in English with no Hindi — clearly focusing on educated, urban audience over mass market localization.</div></div>
+
+  <div class="slabel">Core positioning</div>
+  <div class="card accent"><div class="pos-block">"We help Indian freelancers and IT exporters get paid from abroad quickly, legally, and easily — like a real global business." The professional's payment platform, targeting serious freelancers and small IT businesses, not casual senders. "Sign Up" CTA shows they're targeting users already ready to act.</div></div>
+</div>
+
+<!-- ══════════════ WESTERN UNION ══════════════ -->
+<div id="wu" class="panel">
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Positioning</div><div class="metric-val sm">Legacy Trust</div></div>
+    <div class="metric"><div class="metric-label">Trust</div><div class="metric-val" style="color:var(--amber)">3/5</div></div>
+    <div class="metric"><div class="metric-label">India focus</div><div class="metric-val" style="color:var(--red)">2/5</div></div>
+    <div class="metric"><div class="metric-label">Clarity</div><div class="metric-val" style="color:var(--amber)">3/5</div></div>
+    <div class="metric"><div class="metric-label">CTA</div><div class="metric-val sm" style="color:var(--amber)">Mixed</div></div>
+    <div class="metric"><div class="metric-label">Language</div><div class="metric-val sm">English only</div></div>
+  </div>
+
+  <div class="slabel">Ad hooks</div>
+  <div class="hooks">
+    <div class="hook">"Direct to bank, direct to what matters" — emotional resonance, family-first framing</div>
+    <div class="hook">"From supplies to tuition, make sure they have everything they need" — parent emotion, seasonal</div>
+    <div class="hook">"Fast money transfers" — speed claim without specific proof (weaker than competitors)</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">Emotional triggers</div>
+      <div class="card">
+        <div class="trigger-item"><span class="tag t-blue">Family</span><span>Sending money for education, children's daily needs</span></div>
+        <div class="trigger-item"><span class="tag t-green">Reliability</span><span>150+ year brand recognition is itself the trust signal</span></div>
+        <div class="trigger-item"><span class="tag t-amber">Urgency</span><span>Seasonal hooks like back-to-school create time pressure</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Target audience</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Age</span><span class="aud-val">35–55 years</span></div>
+        <div class="aud-row"><span class="aud-key">Primary segment</span><span class="aud-val">Family remittance senders, parents</span></div>
+        <div class="aud-row"><span class="aud-key">Values</span><span class="aud-val">Trust over price, reliability over speed</span></div>
+        <div class="aud-row"><span class="aud-key">Familiarity</span><span class="aud-val">Already knows WU from years ago</span></div>
+        <div class="aud-row"><span class="aud-key">Tech comfort</span><span class="aud-val">Less comfortable with newer fintech apps</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Visual style</div>
+  <div class="card"><div class="pos-block">Famous yellow and black colors with a very traditional, corporate look that feels old-fashioned. Shows everyday people — families and students — to stay relevant. All ads in English with no localization for India, keeping a strictly international approach while competitors localize aggressively.</div></div>
+
+  <div class="slabel">Core positioning</div>
+  <div class="card" style="border-color:rgba(248,113,113,0.2)"><div class="pos-block">"We are the reliable, established way to send money anywhere in the world — trusted for generations, available everywhere." Leans on heritage and global network rather than competing on fees or technology. Mixed CTA pattern shows strategic drift. Actively repels younger, digital-first users — significant India market risk.</div></div>
+</div>
+
+<!-- ══════════════ SKYDO ══════════════ -->
+<div id="skydo" class="panel">
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Positioning</div><div class="metric-val sm">India Challenger</div></div>
+    <div class="metric"><div class="metric-label">Trust</div><div class="metric-val green">4/5</div></div>
+    <div class="metric"><div class="metric-label">Clarity</div><div class="metric-val green">5/5</div></div>
+    <div class="metric"><div class="metric-label">India focus</div><div class="metric-val green">5/5</div></div>
+    <div class="metric"><div class="metric-label">CTA</div><div class="metric-val sm" style="color:var(--green)">Sign Up</div></div>
+    <div class="metric"><div class="metric-label">Overall</div><div class="metric-val sm" style="color:var(--green)">🥇 Winner</div></div>
+  </div>
+
+  <div class="slabel">Strongest hooks in the category</div>
+  <div class="hooks">
+    <div class="hook">"Your international client paid. Your bank says wait 7 days. It's 2026 — this shouldn't be normal." — frustration-based, the most relatable hook across all five brands</div>
+    <div class="hook">"Tired of losing money on international business payments?" — direct pain point, opens with the question</div>
+    <div class="hook">"Cut your international payment costs by 50%" — number-based proof hook, hard to argue with</div>
+    <div class="hook">"3x Cheaper than Banks / No Forex Margin / No Hidden Charges" — bullet clarity, zero ambiguity</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">Emotional triggers</div>
+      <div class="card">
+        <div class="trigger-item"><span class="tag t-red">Frustration</span><span>"This shouldn't be normal" — validates user pain without lecturing</span></div>
+        <div class="trigger-item"><span class="tag t-green">Savings</span><span>"3x cheaper", "50% savings" — greed trigger backed by specific numbers</span></div>
+        <div class="trigger-item"><span class="tag t-blue">Empowerment</span><span>"Get paid like a local business" — borrowed from Payoneer playbook</span></div>
+        <div class="trigger-item"><span class="tag t-amber">Proof</span><span>"3x cheaper vs banks", "24 hours", "150+ countries" — every claim has a number</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Target audience</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Age</span><span class="aud-val">22–38 years</span></div>
+        <div class="aud-row"><span class="aud-key">Primary segment</span><span class="aud-val">Freelancers, consultants, B2B IT exporters</span></div>
+        <div class="aud-row"><span class="aud-key">Core pain</span><span class="aud-val">Frustrated with HDFC/SBI wire delays & charges</span></div>
+        <div class="aud-row"><span class="aud-key">Urgency</span><span class="aud-val">Actively searching for a better solution now</span></div>
+        <div class="aud-row"><span class="aud-key">Repeated themes</span><span class="aud-val">3x cheaper, no forex margin, 24 hrs, live FX</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Visual style</div>
+  <div class="card"><div class="pos-block">Clean blue and white theme with a modern startup feel. Ads are very text-heavy and get straight to the point with bullet points, app screenshots, and office settings. Founder-style video speaking directly to the camera builds personal trust. All ads in English targeting educated urban professionals.</div></div>
+
+  <div class="slabel">Core positioning</div>
+  <div class="card accent"><div class="pos-block">"Indian businesses are losing money and time on international payments because of banks — we fix that with real savings, real speed, and zero hidden charges." The anti-bank challenger built specifically for Indian businesses. More aggressive than Wise — directly says "3x cheaper than banks" rather than just implying it. The most India-focused brand in the category.</div></div>
+</div>
+
+<!-- ══════════════ XFLOWPAY ══════════════ -->
+<div id="xflow" class="panel">
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-label">Positioning</div><div class="metric-val sm">Honest Revealer</div></div>
+    <div class="metric"><div class="metric-label">Trust</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">Clarity</div><div class="metric-val green">5/5</div></div>
+    <div class="metric"><div class="metric-label">India focus</div><div class="metric-val">4/5</div></div>
+    <div class="metric"><div class="metric-label">Creative</div><div class="metric-val sm" style="color:var(--amber)">Most Unique</div></div>
+    <div class="metric"><div class="metric-label">CTA</div><div class="metric-val sm">Learn More</div></div>
+  </div>
+
+  <div class="slabel">Highest-impact hooks across all brands</div>
+  <div class="hooks">
+    <div class="hook">"Every $10,000 = ₹50,000 lost in fees" — shock via specific rupee math, makes abstract fees immediately tangible</div>
+    <div class="hook">"Did you receive the full amount?" — doubt-planting question, makes users second-guess current provider</div>
+    <div class="hook">"You're losing money on every transfer" — loss aversion framing, most psychologically potent trigger</div>
+    <div class="hook">"Imagine keeping most of $10,000. Sounds good, right?" — aspiration + humor to open the conversation</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="slabel">Emotional triggers</div>
+      <div class="card">
+        <div class="trigger-item"><span class="tag t-red">Loss aversion</span><span>"Losing money now" — present-tense urgency, not future risk</span></div>
+        <div class="trigger-item"><span class="tag t-amber">Shock</span><span>₹50,000 specific rupee number — no ambiguity about the cost</span></div>
+        <div class="trigger-item"><span class="tag t-blue">Humor</span><span>Meme ad format — most memorable and shareable creative</span></div>
+        <div class="trigger-item"><span class="tag t-green">Aspiration</span><span>"Keep what you earn" — simple, powerful summary</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slabel">Target audience</div>
+      <div class="card">
+        <div class="aud-row"><span class="aud-key">Age</span><span class="aud-val">22–35 years</span></div>
+        <div class="aud-row"><span class="aud-key">Primary segment</span><span class="aud-val">Upwork freelancers, small exporters</span></div>
+        <div class="aud-row"><span class="aud-key">Core pain</span><span class="aud-val">Felt the pain of receiving less than expected</span></div>
+        <div class="aud-row"><span class="aud-key">Responds to</span><span class="aud-val">Humor, direct honest messaging, rupee math</span></div>
+        <div class="aud-row"><span class="aud-key">Repeated themes</span><span class="aud-val">Hidden fees, ₹ loss amounts, zero hidden fees, 24h</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slabel">Visual style</div>
+  <div class="card"><div class="pos-block">Dark navy/purple-black with green and blue accents, clean UI screenshots, and meme creative — the most unique visual approach in the entire category. Uses checklist UI showing 4 clear benefits. "Trusted by 20,000+ customers" social proof. Platform contrast ad format ("Your bank wants 3 visits. Xflow doesn't.") is breakthrough creative.</div></div>
+
+  <div class="slabel">Core positioning</div>
+  <div class="card accent"><div class="pos-block">"You think you're getting paid fully — you're not. Hidden fees steal from every transfer. We make it visible and fix it." The Honest Revealer: instead of just claiming to be cheaper, they aggressively show you exactly how much money you're losing right now. Builds smart and instant trust through radical transparency.</div></div>
+</div>
+
+<!-- ══════════════ PLAYBOOK ══════════════ -->
+<div id="playbook" class="panel">
+  <div class="sh">Market gaps — unmapped opportunity</div>
+  <div class="card" style="padding:0 18px">
+    <div class="gap-list">
+      <div class="gap-item">
+        <div class="gap-num">01</div>
+        <div>
+          <div class="gap-title">Unmapped territory</div>
+          <div class="gap-sub">Nobody is targeting Tier 2 &amp; Tier 3 freelance hubs. Cities like Indore, Coimbatore, Surat, and Jaipur have growing freelancer populations completely ignored by all five brands.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-num">02</div>
+        <div>
+          <div class="gap-title">Language barrier</div>
+          <div class="gap-sub">Zero vernacular ad campaigns running in Tamil or Telugu — two of India's largest language markets. Only Wise runs Hindi ads. Tamil Nadu and Andhra Pradesh IT exports are a massive untapped audience.</div>
+        </div>
+      </div>
+      <div class="gap-item">
+        <div class="gap-num">03</div>
+        <div>
+          <div class="gap-title">Cold messaging — family angle missing</div>
+          <div class="gap-sub">The emotional hook of supporting family back home is largely absent across all brands. Western Union scratches the surface but only for traditional remittance senders, not the modern freelancer-supporting-family narrative.</div>
+        </div>
+      </div>
+      <div class="gap-item" style="border-bottom:none">
+        <div class="gap-num">04</div>
+        <div>
+          <div class="gap-title">Blind spot — the receiving side</div>
+          <div class="gap-sub">The families in India receiving money are totally ignored as an ad audience. No brand is running ads to the person waiting for the transfer, even though they influence which platform the sender uses.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hook-big">
+    <div class="hook-big-label">Power hook to own</div>
+    <div class="hook-big-text">"It's 2026. Your client paid instantly. Why did it take 5 days and cost you ₹12,000 to receive it?"</div>
+  </div>
+
+  <div class="sh">What to steal from each brand</div>
+  <div class="steal-grid">
+    <div class="steal-card wise">
+      <div class="steal-from wise">Steal from Wise</div>
+      <div class="steal-label">Local trust</div>
+      <div class="steal-text">Hindi ads + authentic Indian faces. The only brand that makes a non-English-speaking Indian feel represented.</div>
+    </div>
+    <div class="steal-card pay">
+      <div class="steal-from pay">Steal from Payoneer</div>
+      <div class="steal-label">Legality angle</div>
+      <div class="steal-text">Seamless FIRA compliance framing. A compliance signal that only serious exporters understand — filters the best customers.</div>
+    </div>
+    <div class="steal-card xf">
+      <div class="steal-from xf">Steal from Xflowpay</div>
+      <div class="steal-label">Hard math</div>
+      <div class="steal-text">Concrete rupee loss calculations. "Every $10k = ₹50k lost" makes abstract fees instantly tangible and emotional.</div>
+    </div>
+    <div class="steal-card sky">
+      <div class="steal-from sky">Steal from Skydo</div>
+      <div class="steal-label">High intent</div>
+      <div class="steal-text">Most specific numbers + direct "Sign Up" CTA. Bullet-point ads filter casual browsers — only serious buyers click through.</div>
+    </div>
+  </div>
+
+  <div class="sh" style="margin-top:28px">Ideal combined ad formula</div>
+  <div class="card accent" style="padding:20px 22px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Hook</div>
+        <div style="font-size:13.5px;color:var(--text2);line-height:1.65">Xflowpay's rupee math shock + Skydo's "this shouldn't be normal" frustration</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Visuals</div>
+        <div style="font-size:13.5px;color:var(--text2);line-height:1.65">Wise's authentic Indian faces + real transaction amounts as proof</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Trust signals</div>
+        <div style="font-size:13.5px;color:var(--text2);line-height:1.65">Payoneer's FIRA compliance angle for the serious exporter segment</div>
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">CTA</div>
+        <div style="font-size:13.5px;color:var(--text2);line-height:1.65">Skydo's direct "Sign Up" — no soft landing, filter for high intent only</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>India Ad Intelligence Report · May 2026</span>
+  <span>Meta Ads Library Research · Analyst: Krishna Sharma</span>
+  <span>5 Brands · India Market · Intl. Money Transfer</span>
+</footer>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
