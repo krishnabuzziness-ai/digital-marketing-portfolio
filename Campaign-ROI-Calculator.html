@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaign ROI Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f3;
+      --surface: #ffffff;
+      --surface2: #f1efea;
+      --border: rgba(0,0,0,0.12);
+      --border2: rgba(0,0,0,0.22);
+      --text: #1a1a18;
+      --text2: #5f5e5a;
+      --text3: #888780;
+      --green: #1D9E75;
+      --green-bg: #E1F5EE;
+      --red: #D85A30;
+      --red-bg: #FAECE7;
+      --blue: #378ADD;
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a18;
+        --surface: #242422;
+        --surface2: #2c2c2a;
+        --border: rgba(255,255,255,0.1);
+        --border2: rgba(255,255,255,0.2);
+        --text: #f1efea;
+        --text2: #b4b2a9;
+        --text3: #888780;
+        --green-bg: #085041;
+        --red-bg: #4A1B0C;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 14px;
+      color: var(--text3);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      margin-bottom: 1rem;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    .field input {
+      padding: 9px 12px;
+      font-size: 14px;
+      border-radius: var(--radius);
+      border: 0.5px solid var(--border2);
+      background: var(--surface2);
+      color: var(--text);
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--surface2);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+
+    .metric-card .mlabel {
+      font-size: 11px;
+      color: var(--text3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .metric-card .mval {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .metric-card .mval.pos { color: var(--green); }
+    .metric-card .mval.neg { color: var(--red); }
+
+    .insight-box {
+      background: var(--green-bg);
+      border-left: 3px solid var(--green);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .insight-box.warn {
+      background: var(--red-bg);
+      border-color: var(--red);
+    }
+
+    .insight-box strong { color: var(--text); }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      margin-bottom: 0.5rem;
+    }
+
+    .chart-wrap.sm { height: 180px; }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .channel-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .channel-row .ch-name {
+      font-size: 13px;
+      color: var(--text2);
+      width: 110px;
+      flex-shrink: 0;
+    }
+
+    .channel-row input {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: var(--radius);
+      border: 0.5px solid var(--border2);
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .channel-row input:focus { outline: none; border-color: var(--blue); }
+
+    .add-btn {
+      font-size: 13px;
+      color: var(--text3);
+      background: none;
+      border: 0.5px dashed var(--border2);
+      border-radius: var(--radius);
+      padding: 8px 16px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.15s;
+    }
+
+    .add-btn:hover { background: var(--surface2); }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 12px;
+      color: var(--text3);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1><i class="ti ti-chart-bar" style="vertical-align:-2px; margin-right:6px;" aria-hidden="true"></i>Campaign ROI Calculator</h1>
+    <p>Marketing campaign ka ROI, ROAS, aur profitability ek jagah calculate karo</p>
+  </header>
+
+  <!-- Inputs -->
+  <div class="card">
+    <p class="section-label">Campaign details</p>
+    <div class="input-grid">
+      <div class="field">
+        <label>Total ad spend (₹)</label>
+        <input type="number" id="spend" value="50000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label>Total revenue generated (₹)</label>
+        <input type="number" id="revenue" value="180000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label>Number of leads</label>
+        <input type="number" id="leads" value="320" min="0">
+      </div>
+      <div class="field">
+        <label>Conversions (sales)</label>
+        <input type="number" id="conversions" value="48" min="0">
+      </div>
+      <div class="field">
+        <label>Cost of goods / fulfillment (₹)</label>
+        <input type="number" id="cogs" value="60000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label>Total impressions</label>
+        <input type="number" id="impressions" value="120000" min="0" step="1000">
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card">
+    <p class="section-label">Results</p>
+    <div class="metrics-grid" id="metrics-grid"></div>
+    <div class="insight-box" id="insight-box"></div>
+    <div class="chart-wrap">
+      <canvas id="roiChart" role="img" aria-label="Campaign spend vs revenue vs profit bar chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Channel Breakdown -->
+  <div class="card">
+    <p class="section-label">Channel-wise spend breakdown</p>
+    <div id="channels">
+      <div class="channel-row">
+        <span class="ch-name">Google Ads</span>
+        <input type="number" class="ch-spend" value="20000" min="0" step="500">
+      </div>
+      <div class="channel-row">
+        <span class="ch-name">Meta / Instagram</span>
+        <input type="number" class="ch-spend" value="15000" min="0" step="500">
+      </div>
+      <div class="channel-row">
+        <span class="ch-name">Email</span>
+        <input type="number" class="ch-spend" value="8000" min="0" step="500">
+      </div>
+      <div class="channel-row">
+        <span class="ch-name">SEO / Organic</span>
+        <input type="number" class="ch-spend" value="7000" min="0" step="500">
+      </div>
+    </div>
+    <button class="add-btn" id="add-channel">+ add channel</button>
+    <div class="chart-wrap sm" style="margin-top:1.25rem;">
+      <canvas id="channelChart" role="img" aria-label="Channel-wise spend donut chart"></canvas>
+    </div>
+  </div>
+
+  <footer>Built with ❤️ — Digital Marketing Portfolio Project</footer>
+</div>
+
+<script>
+  const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+  const pct = n => (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+  let roiChart, channelChart;
+
+  function getInputs() {
+    return {
+      spend: +document.getElementById('spend').value || 0,
+      revenue: +document.getElementById('revenue').value || 0,
+      leads: +document.getElementById('leads').value || 0,
+      conversions: +document.getElementById('conversions').value || 0,
+      cogs: +document.getElementById('cogs').value || 0,
+      impressions: +document.getElementById('impressions').value || 0,
+    };
+  }
+
+  function compute(d) {
+    const profit = d.revenue - d.spend - d.cogs;
+    const roi = d.spend > 0 ? (profit / d.spend) * 100 : 0;
+    const roas = d.spend > 0 ? d.revenue / d.spend : 0;
+    const cpl = d.leads > 0 ? d.spend / d.leads : 0;
+    const cpa = d.conversions > 0 ? d.spend / d.conversions : 0;
+    const cvr = d.leads > 0 ? (d.conversions / d.leads) * 100 : 0;
+    const cpm = d.impressions > 0 ? (d.spend / d.impressions) * 1000 : 0;
+    return { profit, roi, roas, cpl, cpa, cvr, cpm };
+  }
+
+  function updateMetrics() {
+    const d = getInputs();
+    const c = compute(d);
+
+    const grid = document.getElementById('metrics-grid');
+    grid.innerHTML = `
+      <div class="metric-card"><div class="mlabel">ROI</div><div class="mval ${c.roi>=0?'pos':'neg'}">${pct(c.roi)}</div></div>
+      <div class="metric-card"><div class="mlabel">Net profit</div><div class="mval ${c.profit>=0?'pos':'neg'}">${fmt(c.profit)}</div></div>
+      <div class="metric-card"><div class="mlabel">ROAS</div><div class="mval">${c.roas.toFixed(2)}x</div></div>
+      <div class="metric-card"><div class="mlabel">Cost per lead</div><div class="mval">${fmt(c.cpl)}</div></div>
+      <div class="metric-card"><div class="mlabel">Cost per sale</div><div class="mval">${fmt(c.cpa)}</div></div>
+      <div class="metric-card"><div class="mlabel">Conversion rate</div><div class="mval">${c.cvr.toFixed(1)}%</div></div>
+      <div class="metric-card"><div class="mlabel">CPM</div><div class="mval">${fmt(c.cpm)}</div></div>
+    `;
+
+    const insightEl = document.getElementById('insight-box');
+    if (c.roas >= 3) {
+      insightEl.className = 'insight-box';
+      insightEl.innerHTML = `Strong campaign — ROAS <strong>${c.roas.toFixed(2)}x</strong> hai, matlab har ₹1 spend pe <strong>₹${c.roas.toFixed(2)}</strong> wapas aa raha hai.`;
+    } else if (c.roas >= 1) {
+      insightEl.className = 'insight-box warn';
+      insightEl.innerHTML = `Campaign break-even ke paas hai — ROAS <strong>${c.roas.toFixed(2)}x</strong>. Budget profitable channels pe shift karo.`;
+    } else {
+      insightEl.className = 'insight-box warn';
+      insightEl.innerHTML = `Campaign loss mein hai — ROAS <strong>${c.roas.toFixed(2)}x</strong>. Targeting ya offer revisit karo immediately.`;
+    }
+
+    updateMainChart(d, c);
+    updateChannelChart();
+  }
+
+  function updateMainChart(d, c) {
+    if (roiChart) roiChart.destroy();
+    roiChart = new Chart(document.getElementById('roiChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Ad Spend', 'COGS', 'Revenue', 'Net Profit'],
+        datasets: [{
+          data: [d.spend, d.cogs, d.revenue, c.profit],
+          backgroundColor: ['#888780', '#B4B2A9', '#1D9E75', c.profit >= 0 ? '#1D9E75' : '#D85A30'],
+          borderRadius: 5,
+          barThickness: 42,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#888780', font: { size: 12 } } },
+          y: {
+            grid: { color: 'rgba(136,135,128,0.12)' },
+            ticks: {
+              color: '#888780',
+              font: { size: 11 },
+              callback: v => '₹' + (v >= 100000 ? (v/100000).toFixed(1)+'L' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v)
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function updateChannelChart() {
+    const rows = document.querySelectorAll('#channels .channel-row');
+    const channels = Array.from(rows).map(r => ({
+      name: r.querySelector('.ch-name').textContent.trim(),
+      spend: +r.querySelector('.ch-spend').value || 0
+    }));
+    const colors = ['#1D9E75','#378ADD','#D85A30','#BA7517','#534AB7','#D4537E','#888780'];
+
+    if (channelChart) channelChart.destroy();
+    channelChart = new Chart(document.getElementById('channelChart'), {
+      type: 'doughnut',
+      data: {
+        labels: channels.map(c => c.name),
+        datasets: [{
+          data: channels.map(c => c.spend),
+          backgroundColor: colors.slice(0, channels.length),
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: { position: 'right', labels: { color: '#888780', font: { size: 12 }, boxWidth: 12, padding: 12 } },
+          tooltip: { callbacks: { label: ctx => ' ' + fmt(ctx.raw) } }
+        }
+      }
+    });
+  }
+
+  document.querySelectorAll('#spend,#revenue,#leads,#conversions,#cogs,#impressions').forEach(el => {
+    el.addEventListener('input', updateMetrics);
+  });
+
+  document.getElementById('channels').addEventListener('input', updateMetrics);
+
+  document.getElementById('add-channel').addEventListener('click', () => {
+    const div = document.createElement('div');
+    div.className = 'channel-row';
+    div.innerHTML = `
+      <span class="ch-name" contenteditable="true" style="outline:none; border-bottom: 0.5px dashed rgba(0,0,0,0.2);">New channel</span>
+      <input type="number" class="ch-spend" value="5000" min="0" step="500">
+    `;
+    div.querySelector('.ch-spend').addEventListener('input', updateMetrics);
+    document.getElementById('channels').appendChild(div);
+    updateMetrics();
+  });
+
+  updateMetrics();
+</script>
+</body>
+</html>
